@@ -1,14 +1,19 @@
 import { StyleSheet, Alert, Text, ActivityIndicator, KeyboardAvoidingView, ScrollView, Keyboard, View, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Input from '../components/CustomInput'
 import Title from '../components/CustomeTitle'
 import CustomButton from '../components/CustomButton'
 import CustomeSafeArea from '../components/CustomeSafeArea'
 
+import { UserContext } from '../contexts/UserContext';
+
 const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiODdlYWMxOGRlNWRiZWJjYTI5YTAwOTZlODJmOGFlNjBkMzU5MGM1MmM1NWVmNmRmN2VkMTQ2ODBlYjllMzdmNmJjMjAyZDRjODliNWZhNTciLCJpYXQiOjE2ODYxNDMxODAuMzE0MzA2LCJuYmYiOjE2ODYxNDMxODAuMzE0MzEyLCJleHAiOjE3MTc3NjU1ODAuMzA5MjE5LCJzdWIiOiIxMTUiLCJzY29wZXMiOltdfQ.YApd-68JzGR0B0z3i3-N6yiFinDvaqkFUB2Ys5i_ZbS1AehEiti24IqnStbsiN_Bzoev99JB6qT3WYO9zBxrI3YM-qPKYtvtQTyEYuYK1O3wrykoiZse3et1n1FiSQdSfAzET_OIQAqWBV0fnma_08sLL_1yM8Iih2EPXFUHv-e3Rqt-BHuxEKLfJWtFrK5aR2crm9REPQRhCbqoAxqmCuRoWpOHcfYkGil6G-Z8cTyQnWkF9HrZuJ1veDKeYWDNbpiFaAkGD27MNy7Xi9UIYVBj4g7IbtU2k3l7j5MIHz6UnQrjHQQ9VLnk99yEblBrISefnyxa3RYZZM7rOfFQavTn55tfDJmRaSExxdNpe2MDWv5u-g3mefwLfX_OLlVnPBTB4urqiXSGWmveAwWq6_HD6ilCewGB-rlRHfGHCG9G3mRYquTmeMx0ZBtEbbr_UNgQkYkQqyekbvV4idVXz82TAtOpTg3A25oQVlA4KIfhUbkLOZFfpmHsfKFt2UvL7y9NZNcqANcMGrzYLOC43aQ3m1TEDeEBRBRJQn5lidQahSExOg8tOReuJC0KCYYikg11HZHEyqtlIpfZRpNjykIL6AXKmKTE9kt4HSDVnTf5fw198yo-sdmnoX3eIB3zu3BOJWjINS2Dy7ShBysr1Otbbt98uqCe7YJMQC2_stk'
 
 const Login = ({ navigation }) => {
+    // const { user, saveUser } = useContext(UserContext)
+
     const [email, setEmail] = useState('a@a.com')
     const [password, setPassword] = useState('123456')
     const [emailErr, setEmailErr] = useState('')
@@ -62,7 +67,10 @@ const Login = ({ navigation }) => {
                     body: JSON.stringify(user),
                 })
                 const res = await response.json();
-                console.log('Result: ', res)
+                console.log('Result: ', res.token)
+                const userToken = res.token
+                //saving user token in AsyncStorage
+                await AsyncStorage.setItem('userToken', userToken)
 
                 if (response.ok) {
                     Alert.alert(
@@ -122,7 +130,7 @@ const Login = ({ navigation }) => {
                     />
                     <TouchableOpacity
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('Forgot Password')} style={{ alignItems: 'flex-end', paddingTop: 5 }}>
+                        onPress={() => navigation.navigate('Forgot')} style={{ alignItems: 'flex-end', paddingTop: 5 }}>
                         <Text style={{ fontSize: 16 }} >Forgot password?</Text>
                     </TouchableOpacity>
                     {passwordErr !== '' && <Text style={{ color: 'red' }}>{passwordErr}</Text>}

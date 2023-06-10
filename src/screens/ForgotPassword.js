@@ -5,36 +5,57 @@ import Input from '../components/CustomInput'
 import Title from '../components/CustomeTitle'
 import CustomButton from '../components/CustomButton'
 import CustomeSafeArea from '../components/CustomeSafeArea'
+import Color from '../config/Color'
 
 
 const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState('dev1@yopmail.com')
     const [emailErr, setEmailErr] = useState('')
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
-    const sendResetPasswordEmail = async () => {
-
+    const sendForgotPasswordEmail = async () => {
+        setLoading(true)
         const data = {
             email: 'dev1@yopmail.com',
             title: 'Project Name',
             link: 'https://example.com/',
         };
 
-        try {
-            const response = await fetch('https://apingweb.com/api/forgot-password', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            const res = await response.json();
-            console.log('Result forgot password: ', res)
+        let isValid = true
+        if (isValid) {
 
-        } catch (error) {
-            setError(error.message)
+            try {
+                const response = await fetch('https://apingweb.com/api/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                const res = await response.json();
+                const msgSuccess = res.message
+                console.log('Result forgot password: ', msgSuccess)
+                if (response.status == 200) {
+                    Alert.alert(
+                        'Success',
+                        `${msgSuccess}`,
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => navigation.navigate('Reset'),
+                            },
+
+                        ]
+                    );
+                }
+
+            } catch (error) {
+                setError(error.message)
+            }
         }
+        setLoading(false)
     };
 
     return (
@@ -43,7 +64,7 @@ const ForgotPassword = ({ navigation }) => {
                 behavior={Platform.OS === "ios" ? "padding" : null}
                 keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <Title title='Reset Password' />
+                    <Title title='Forgot Password' />
                     <Input
                         iconName='email-outline'
                         onChangeText={(email) => setEmail(email)}
@@ -52,7 +73,8 @@ const ForgotPassword = ({ navigation }) => {
                         onFocus={() => setEmailErr('')}
                     />
                     {emailErr !== '' && <Text style={{ color: 'red' }}>{emailErr}</Text>}
-                    <CustomButton title='Send' onPress={sendResetPasswordEmail} />
+                    <CustomButton title='Send' onPress={sendForgotPasswordEmail} />
+                    {loading && <ActivityIndicator size='large' color={Color.primary} />}
                     <>
                         {error && <Text style={{ color: 'red', alignSelf: 'center' }}>{error}</Text>}
                         {/* {loading && <ActivityIndicator size="large" color={Color.primary} />} */}

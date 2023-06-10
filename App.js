@@ -8,6 +8,7 @@ import Register from './src/screens/Register'
 import Login from './src/screens/Login'
 import Color from './src/config/Color'
 import ForgotPassword from './src/screens/ForgotPassword'
+import ResetPassword from './src/screens/ResetPassword'
 import Map from './src/screens/Map'
 
 const Stack = createStackNavigator()
@@ -20,7 +21,8 @@ const App = () => {
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='Login' component={Login} />
         <Stack.Screen name='Register' component={Register} />
-        <Stack.Screen name='Forgot Password' component={ForgotPassword} />
+        <Stack.Screen name='Forgot' component={ForgotPassword} />
+        <Stack.Screen name='Reset' component={ResetPassword} />
         <Stack.Screen name='Map' component={Map} />
       </Stack.Navigator>
     </NavigationContainer>
